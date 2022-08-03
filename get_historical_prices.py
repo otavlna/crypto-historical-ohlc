@@ -4,7 +4,7 @@ import time
 import math
 from tqdm import tqdm
 
-# connect to database and create table
+# connect to database
 con = sqlite3.connect('data.db')
 cur = con.cursor()
 
