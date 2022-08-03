@@ -5,7 +5,7 @@ import math
 from tqdm import tqdm
 
 # connect to database and create table
-con = sqlite3.connect('price_data.db')
+con = sqlite3.connect('data.db')
 cur = con.cursor()
 
 # config
