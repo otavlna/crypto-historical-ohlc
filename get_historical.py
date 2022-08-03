@@ -15,18 +15,19 @@ timeframe_in_seconds = 1 * 60 * 60 # change to match timeframe
 current_timestamp = math.floor(time.time())
 start_at = current_timestamp - 365 * 24 * 60 * 60
 end_at = current_timestamp
+pieces_of_data = 1500 # kucoin API returns at most 1500 pieces of data for each query
+
+# create table
+cur.execute(f'CREATE TABLE IF NOT EXISTS "{timeframe}" (pair text, time int, open real, close real, high real, low real, volume real, turnover real)')
 
 for pair in coin_pairs:
   print(f'{pair} start')
-  # create table
-  cur.execute(f'CREATE TABLE "{pair}" (time int, open real, close real, high real, low real, volume real, turnover real)')
-
   # generate start and end times
   next_start_at = start_at
   times = []
   while next_start_at < end_at:
     current_start_at = next_start_at
-    current_end_at = current_start_at + timeframe_in_seconds * 1000
+    current_end_at = current_start_at + timeframe_in_seconds * pieces_of_data
     if current_end_at > end_at:
       current_end_at = end_at
     times.append((current_start_at, current_end_at))
@@ -37,14 +38,14 @@ for pair in coin_pairs:
     (current_start_at, current_end_at) = current_batch
     res = requests.get(f'https://api.kucoin.com/api/v1/market/candles?type={timeframe}&symbol={pair}&startAt={current_start_at}&endAt={current_end_at}')
     res = res.json()
-    if res["code"] != "200000":
+    if res["code"] != "200000": # ok
       tqdm.write(f'error code: {res["code"]}, will try this batch again at the end: {current_batch}')
-      if res["code"] == "429000":
+      if res["code"] == "429000": # request rate limit is exceeded
         tqdm.write("If this is not stuck in a loop then the data should be fine")
       times.append(current_batch)
       continue
     data = res["data"]
-    cur.executemany(f'INSERT INTO "{pair}" VALUES (?, ?, ?, ?, ?, ?, ?)', data)
+    cur.executemany(f'INSERT INTO "{timeframe}" VALUES ("{pair}", ?, ?, ?, ?, ?, ?, ?)', data)
     con.commit()
     #time.sleep() # if stuck in error 429000 loop then maybe sleeping here would help, but in my case it didn't have much effect 
 
