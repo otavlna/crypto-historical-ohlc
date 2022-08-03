@@ -24,6 +24,9 @@ for pair in coin_pairs:
   print(f'{pair} start')
   # generate start and end times
   next_start_at = start_at
+  last_insert_time = cur.execute(f'SELECT MAX(time) FROM "{timeframe}" WHERE pair=?', [pair]).fetchone()[0]
+  if last_insert_time is not None:
+    next_start_at = last_insert_time + timeframe_in_seconds
   times = []
   while next_start_at < end_at:
     current_start_at = next_start_at
