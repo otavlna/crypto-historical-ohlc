@@ -376,6 +376,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pycoingecko"
+version = "2.2.0"
+description = "Python wrapper around the CoinGecko API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
@@ -551,7 +562,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "50c4c98788c8a827f015acdb6d83fa55b5b7fa9336c6c5568b44a79514b45b5f"
+content-hash = "184731dd3ef63f2ba043baebffb6933b6db96254abf9707ed49b1f0c28347138"
 
 [metadata.files]
 appnope = []
@@ -620,6 +631,7 @@ ptyprocess = []
 pure-eval = []
 py = []
 pycodestyle = []
+pycoingecko = []
 pycparser = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
     {file = "pycparser-2.21.tar.gz", hash = "sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"},
